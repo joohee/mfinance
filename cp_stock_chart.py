@@ -27,13 +27,17 @@ class StockChart:
         
         codes = StockChartCodes()
         for i in range(codes.get_header_count()):
-            print("{0} = {1}".format(codes.header_dic(str(i)), com_obj.GetHeaderValue(i)))
+            print("{0} = {1}".format(codes.header_dic.get(str(i)), com_obj.GetHeaderValue(i)))
 
         num = com_obj.GetHeaderValue(3)
         for i in range(num):
             for idx in range(codes.get_stock_field_count()):
-                print("\t{0}: {1}".format(codes.stock_field_dic.get(str(idx)), com_obj.GetDataValue(idx, i)))
-                print("\t==============")
+                try:
+                    print("\t{0}: {1}".format(codes.stock_field_dic.get(str(idx)), com_obj.GetDataValue(idx, i)))
+                    print("\t==============")
+                except:
+                    print("error occured")
+                    pass
 
 if __name__ == '__main__':
     stockchart = CpClass.Bind(StockChart())
