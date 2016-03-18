@@ -39,18 +39,30 @@ class StockChart:
         print ('rp [%s]'%self.__class__.__name__)
         
         codes = StockChartCodes()
-        for i in range(codes.get_header_count()):
-            print("{0} = {1}".format(codes.header_dic.get(str(i)), reqObj.GetHeaderValue(i)))
 
+        str_list = []
+        dirname = os.path.dirname(__file__)
+        fullpath = os.path.join(dirname, yyyymmdd+'_StockChart_all.csv')
         num = reqObj.GetHeaderValue(3)
-        for i in range(num):
-            for idx in range(codes.get_stock_field_count()):
-                try:
-                    print("\t{0}: {1}".format(codes.stock_field_dic.get(str(idx)), reqObj.GetDataValue(idx, i)))
-                    print("\t==============")
-                except:
-                    print("error occured")
-                    pass
+        with open(fullpath, 'w', encoding='utf-8') as f:
+            #for i in range(codes.get_header_count()):
+                #print("{0} = {1}".format(codes.header_dic.get(str(i)), reqObj.GetHeaderValue(i)))
+            for i in range(codes.get_stock_field_count()):
+                str_list.append(codes.stock_field_dic.get(str(i)))
+                
+            del str_list[:]
+            for i in range(num):
+                for idx in range(codes.get_stock_field_count()):
+                    try:
+                        #print("\t{0}: {1}".format(codes.stock_field_dic.get(str(idx)), reqObj.GetDataValue(idx, i)))
+                        #print("\t==============")
+                        str_list.append(str(reqObj.GetDataValue(idx, i)))
+                        f.write('\t'.join(str_list))
+                        f.write('\n')
+                    except:
+                        print("error occured")
+                        pass
+                    del str_list[:]
 
 if __name__ == '__main__':
     stockchart = CpClass.Bind(StockChart())
