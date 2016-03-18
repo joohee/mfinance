@@ -68,6 +68,53 @@ class StockChart:
         "Z": "ETF종목"
     }
 
+    stock_field_dic = {
+        "0": "날짜(ulong)",
+        "1": "시간(long) - hhmm",
+        "2": "시가(long or float)",
+        "3": "고가(long or float)",
+        "4": "저가(long or float)",
+        "5": "종가(long or float)",
+        "6": "전일대비(long or float) - 주) 대비부호(37)과 반드시 같이 요청해야 함",
+        "8": "거래량(ulong or ulonglong) 주) 정밀도 만원 단위",
+		"9": "거래대금(ulonglong)",
+		"10": "누적체결매도수량(ulong or ulonglong) - 호가비교방식 누적체결매도수량",
+		"11": "누적체결매수수량(ulong or ulonglong) - 호가비교방식 누적체결매수수량",
+		# (주) 10, 11 필드는 분,틱 요청일 때만 제공",
+		"12": "상장주식수(ulonglong)",
+		"13": "시가총액(ulonglong)",
+		"14": "외국인주문한도수량(ulong)",
+		"15": "외국인주문가능수량(ulong)",
+		"16": "외국인현보유수량(ulong)",
+		"17": "외국인현보유비율(float)",
+		"18": "수정주가일자(ulong) - YYYYMMDD",
+		"19": "수정주가비율(float)",
+		"20": "기관순매수(long)",
+		"21": "기관누적순매수(long)",
+		"22": "등락주선(long)",
+		"23": "등락비율(float)",
+		"24": "예탁금(ulonglong)",
+		"25": "주식회전율(float)",
+		"26": "거래성립률(float)",
+		"37": "대비부호(char)"      # 수신값은 GetHeaderValue 8 대비부호와 동일"
+    }
+
+    @classmethod 
+    def get_header_count(cls):
+        return len(cls.header_dic)
+
+    @classmethod
+    def get_compare_mark_count(cls):
+        return len(cls.compare_mark_dic)
+
+    @classmethod
+    def get_stock_status_count(cls):
+        return len(cls.stock_status_dic)
+
+    @classmethod
+    def get_stock_field_count(cls):
+        return len(cls.stock_field_dic)
+
     def __init__(self):
         pass
 
@@ -77,6 +124,7 @@ if __name__ == "__main__":
     header_keys = stockChart.header_dic.keys()
     compare_mark_keys = stockChart.compare_mark_dic.keys()
     stock_status_keys = stockChart.stock_status_dic.keys()
+    stock_field_keys = stockChart.stock_field_dic.keys()
 
     for key in sorted(header_keys):
         print("header key:{0}, value: {1}".format(key, stockChart.header_dic.get(key)))
@@ -86,6 +134,9 @@ if __name__ == "__main__":
     print("====================")
     for key in sorted(stock_status_keys):
         print("stock_status key:{0}, value: {1}".format(key, stockChart.stock_status_dic.get(key)))
+    print("====================")
+    for key in sorted(stock_field_keys):
+        print("stock_field key:{0}, value: {1}".format(key, stockChart.stock_field_dic.get(key)))
     print("====================")
 
 
