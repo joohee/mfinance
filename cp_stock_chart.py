@@ -3,6 +3,7 @@ import win32com.client
 import pythoncom
 import threading
 import time
+import datetime
 from packages.cp_template import CpClass
 from packages.cp_stock_chart.codes import StockChart as StockChartCodes 
 
@@ -10,30 +11,42 @@ class StockChart:
     def __init__(self):
         self.com_str = "CpSysDib.StockChart"
 
-    def request(self, com_obj):
-        com_obj.SetInputValue(0, 'A067160')
-        com_obj.SetInputValue(1, '1')        # count
-        com_obj.SetInputValue(2, '0')        # lastest 
-        com_obj.SetInputValue(3, '20160310')
-        com_obj.SetInputValue(4, 10)        # request count
-        com_obj.SetInputValue(5, [0, 1, 2, 3, 4, 5, 6, 8, 9, 37])
-        com_obj.SetInputValue(6, ord('m'))        # minute
-        com_obj.SetInputValue(9, '1')
-        com_obj.Request()
+    def request(self, reqObj):
+        today = datetime.datetime.now()
+        fromdate = today - datetime.timedelta(days=7)
+
+        yyyymmdd = today.strftime('%Y%m%d')
+        fyyyymmdd = fromdate.strftime('%Y%m%d')
+        count = 20
+        
+        reqObj.SetInputValue(0, 'A067160')
+        #reqObj.SetInputValue(1, '2')        # date
+        #reqObj.SetInputValue(2, yyyymmdd)     # end date
+        #reqObj.SetInputValue(3, fyyyymmdd)     # start date
+        #reqObj.SetInputValue(6, ord('D'))        # day
+        reqObj.SetInputValue(1, '1')        # count
+        reqObj.SetInputValue(2, '0')        # lastest
+        reqObj.SetInputValue(3, yyyymmdd)
+
+        reqObj.SetInputValue(4, 10)        # request count
+        reqObj.SetInputValue(5, [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 37])
+        reqObj.SetInputValue(6, ord('m'))        # minute
+        reqObj.SetInputValue(9, '1')
+        reqObj.Request()
         print ('rq [%s]'%self.__class__.__name__)
 
-    def response(self, com_obj):
+    def response(self, reqObj):
         print ('rp [%s]'%self.__class__.__name__)
         
         codes = StockChartCodes()
         for i in range(codes.get_header_count()):
-            print("{0} = {1}".format(codes.header_dic.get(str(i)), com_obj.GetHeaderValue(i)))
+            print("{0} = {1}".format(codes.header_dic.get(str(i)), reqObj.GetHeaderValue(i)))
 
-        num = com_obj.GetHeaderValue(3)
+        num = reqObj.GetHeaderValue(3)
         for i in range(num):
             for idx in range(codes.get_stock_field_count()):
                 try:
-                    print("\t{0}: {1}".format(codes.stock_field_dic.get(str(idx)), com_obj.GetDataValue(idx, i)))
+                    print("\t{0}: {1}".format(codes.stock_field_dic.get(str(idx)), reqObj.GetDataValue(idx, i)))
                     print("\t==============")
                 except:
                     print("error occured")
