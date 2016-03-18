@@ -26,7 +26,7 @@ class StockChart:
         "23": "하한가"
     }
 
-    # 대비부호 
+    # 대비부호 - header 8번 해석 용
     compare_mark_dic = {
         "1": "상한",
         "2": "상승",
@@ -38,6 +38,58 @@ class StockChart:
         "8": "기세하한",
         "9": "기세하락"
     }
+
+    # 종목 상태 - header 17번 해석 용  
+    stock_status_dic = {
+        "0": "정상",
+        "1": "투자위험",
+        "2": "관리",
+        "3": "거래정지",
+        "4": "불성실공시",
+        "5": "불성실공시&관리",
+        "6": "불성실공시&거래정지",
+        "7": "불성실공시&투자위험",
+        "8": "투자위험&거래정지",
+        "9": "관리&거래정지",
+        "A": "불성실공시&관리&거래정지",
+        "B": "불성실공시&투자위험&거래정지",
+        "C": "투자위험예고",
+        "D": "투자주의",
+        "E": "투자경고",
+        "F": "불성실공시&투자위험예고",
+        "G": "불성실공시&투자주의",
+        "H": "불성실공시&투자경고",
+        "I": "투자위험예고&거래정지",
+        "J": "투자주의&거래정지",
+        "K": "투자경고&거래정지",
+        "L": "불성실공시&투자위험예고&거래정지",
+        "M": "불성실공시&투자주의&거래정지",
+        "N": "불성실공시&투자경고&거래정지",
+        "Z": "ETF종목"
+    }
+
+    def __init__(self):
+        pass
+
+if __name__ == "__main__":
+    stockChart = StockChart()
+
+    header_keys = stockChart.header_dic.keys()
+    compare_mark_keys = stockChart.compare_mark_dic.keys()
+    stock_status_keys = stockChart.stock_status_dic.keys()
+
+    for key in sorted(header_keys):
+        print("header key:{0}, value: {1}".format(key, stockChart.header_dic.get(key)))
+    print("====================")
+    for key in sorted(compare_mark_keys):
+        print("compare_mark key:{0}, value: {1}".format(key, stockChart.compare_mark_dic.get(key)))
+    print("====================")
+    for key in sorted(stock_status_keys):
+        print("stock_status key:{0}, value: {1}".format(key, stockChart.stock_status_dic.get(key)))
+    print("====================")
+
+
+    
 
     
 
