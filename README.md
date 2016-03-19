@@ -1,6 +1,7 @@
 # mfinance
 
 # structure
+```
 ├── cp_code_mgr.py
 ├── cp_code_test.py
 ├── cp_codemgr.py
@@ -11,3 +12,4 @@
     ├── cp_stock_chart
     │   └── codes.py
     └── cp_template.py
+```
