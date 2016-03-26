@@ -8,13 +8,14 @@ import time
 class Crawl:
     def __init__(self):
         self.dirname = os.path.dirname(__file__)
+        self.today = datetime.datetime.now().strftime('%Y%m%d')
         pass
 
     def parse_code(self, filename):
         config = self.parse_json()
         prefix = config.get('prefix_url')
 
-        target = open('output.csv', 'w', encoding='utf-8')
+        target = open(self.today+'_output.csv', 'w', encoding='utf-8')
         try:
             str_list = []
             fullpath = os.path.join(os.path.dirname(__file__), filename)
