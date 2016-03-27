@@ -1,57 +1,56 @@
-import win32com
-import win32com.client
-import pythoncom
-import threading
+from weakref import proxy
+from pythoncom import CoInitialize, PumpWaitingMessages
+from win32com.client import gencache, DispatchWithEvents
+from win32event import MsgWaitForMultipleObjects, QS_ALLEVENTS
 import time
 import datetime
 import os
 from packages.cp_template import CpClass
 from packages.cp_stock_chart.codes import StockChart as StockChartCodes 
 
+class CpEvent(object):
+    def OnReceived(self):
+        self.parent.on_signal()
+        
 class StockChart:
     def __init__(self, code):
         self.code = code
-        self.com_str = "CpSysDib.StockChart"
-        self.today = datetime.datetime.now()
-        self.fromdate = self.today - datetime.timedelta(days=7)
+        self.event = DispatchWithEvents("CpSysDib.StockChart", CpEvent)
+        self.com = self.event._obj_
+        self.event.parent = proxy(self)
 
-        self.yyyymmdd = self.today.strftime('%Y%m%d')
-        self.fyyyymmdd = self.fromdate.strftime('%Y%m%d')
-        self.count = 20
+
+        self.count = 400
+        self.today = datetime.datetime.now()
+        #self.yyyymmdd = self.today.strftime('%Y%m%d')
+        self.yyyymmdd = '20160325'
+        self.com.SetInputValue(0, self.code)
+        self.com.SetInputValue(1, '2')        # by count
+        self.com.SetInputValue(2, '0')        # lastest
+        self.com.SetInputValue(3, self.yyyymmdd)
+        self.com.SetInputValue(6, ord('m'))        # minute
+        
+        self.com.SetInputValue(4, self.count)        # request count
+        self.com.SetInputValue(5, [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 37])
+        self.com.SetInputValue(9, '1')
+
+        self.com.Request()
+        CoInitialize()
 
         print("today: {}".format(self.today))
         
-    def request(self, reqObj):
-        reqObj.SetInputValue(0, self.code)
-        reqObj.SetInputValue(1, '2')        # by date
-        reqObj.SetInputValue(2, self.yyyymmdd)     # end date
-        reqObj.SetInputValue(3, self.fyyyymmdd)     # start date
-        reqObj.SetInputValue(6, ord('D'))        # day
-        #reqObj.SetInputValue(1, '1')        # by count
-        #reqObj.SetInputValue(2, '0')        # lastest
-        #reqObj.SetInputValue(3, self.yyyymmdd)
-        #reqObj.SetInputValue(6, ord('M'))        # minute
-        
-        reqObj.SetInputValue(4, self.count)        # request count
-        reqObj.SetInputValue(5, [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 37])
-        reqObj.SetInputValue(9, '1')
-        reqObj.Request()
-        print ('rq [%s]'%self.__class__.__name__)
-        print('count: {}'.format(self.count))
-
-    def response(self, reqObj):
-        print ('rp [%s]'%self.__class__.__name__)
-        
+    def on_signal(self):
+        print ('rp [%s]'%self.__class__.__name__)        
         codes = StockChartCodes()
 
         str_list = []
         dirname = os.path.dirname(__file__)
-        fullpath = os.path.join(dirname, self.yyyymmdd+'_StockChart_all.csv')
-        num = reqObj.GetHeaderValue(3)
+        fullpath = os.path.join(dirname, self.yyyymmdd+'_StockChart_min.csv')
+        num = self.com.GetHeaderValue(3)
         print('received count: {}'.format(num))
+        
         with open(fullpath, 'w', encoding='utf-8') as f:
-            #for i in range(codes.get_header_count()):
-                #print("{0} = {1}".format(codes.header_dic.get(str(i)), reqObj.GetHeaderValue(i)))
+            print("[START] write header")
             for i in range(codes.get_stock_field_count()):
                 header = codes.stock_field_dic.get(str(i))
                 if header is None:
@@ -59,30 +58,34 @@ class StockChart:
                 else:
                     str_list.append(header)
 
-            print("str_list: {}".format(str_list))
+            #print("str_list: {}".format(str_list))
             f.write('\t'.join(str_list))
             f.write('\n')
             del str_list[:]
-            
+            print("[DONE] write header")
+
+            print("[START] write data")
             for i in range(num):
+                date = self.com.GetDataValue(0, i)
+                if self.yyyymmdd != str(date):
+                    print("{} is different with today {}.. continue".format(str(date), self.yyyymmdd))
+                    continue
+                
                 for idx in range(codes.get_stock_field_count()):
                     try:
                         #print("\t{0}: {1}".format(codes.stock_field_dic.get(str(idx)), reqObj.GetDataValue(idx, i)))
                         #print("\t==============")
-                        str_list.append(str(reqObj.GetDataValue(idx, i)))
+                        str_list.append(str(self.com.GetDataValue(idx, i)))
                     except:
                         print("error occured")
                         pass
-                print("str_list: {}".format(str_list))
+                #print("str_list: {}".format(str_list))
                 f.write('\t'.join(str_list))
                 f.write('\n')
                 del str_list[:]
+            print("[END] write data")
 
 if __name__ == '__main__':
-    stockchart = CpClass.Bind(StockChart('A067160'))
-    stockchart.Request()
-
-    while True:
-        pythoncom.PumpWaitingMessages()
-        time.sleep(0.01)
+    stockchart = StockChart('A067160')
+  
 

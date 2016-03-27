@@ -9,22 +9,21 @@ def cp_code_mgr():
     print("=========================\n")
     today = datetime.datetime.now()
     with open(today.strftime('%Y%m%d')+'_cpCodeMgr_code_only.csv', 'w', encoding='utf-8') as f:
-        header_list = []
-        for i in range(len(codes.header_dic)):
-            header_list.append(codes.get_header(str(i)))
-        f.write('\t'.join(header_list))
-        f.write('\n')
-
         for idx in range(len(codes.stock_market_code_dic)):
             codeList = instCpCodeMgr.GetStockListByMarket(idx)
             
             str_list = []
             for i, code in enumerate(codeList):
                 name = instCpCodeMgr.CodeToName(code)
-
+                #marketKindCode = instCpCodeMgr.GetStockMarketKind(code)
+                
                 #print(i, code, secondCode, name)
                 str_list.append(str(i))
                 str_list.append(code)
+                str_list.append(name)
+                str_list.append(str(idx))
+                str_list.append(codes.get_stock_market_kind(str(idx)))
+                
                 f.write('\t'.join(str_list))
                 f.write('\n')
                 del str_list[:]

@@ -17,7 +17,7 @@ class CPStockCode:
             for i in range(count):
                 line = str(i)
                 for idx in range(0, self.index_no):
-                    line += "{0}".format(inst.GetData(idx, i))
+                    line += "\t{0}".format(inst.GetData(idx, i))
                 f.write(line+"\n")
                 
         print("=========================\n")
