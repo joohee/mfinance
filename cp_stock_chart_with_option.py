@@ -28,8 +28,8 @@ class StockChart:
 
         self.com.SetInputValue(0, self.code)
         self.com.SetInputValue(1, '2')        # by count
-        self.com.SetInputValue(2, '0')        # lastest
-        self.com.SetInputValue(3, self.yyyymmdd)
+        self.com.SetInputValue(2, self.from_yyyymmdd)        # lastest
+        self.com.SetInputValue(3, self.to_yyyymmdd)
         self.com.SetInputValue(6, ord('m'))        # minute
         
         self.com.SetInputValue(4, self.count)        # request count
@@ -45,10 +45,11 @@ class StockChart:
         print ('rp [%s]'%self.__class__.__name__)        
         codes = StockChartCodes()
 
-        for day in range(int(self.from_yyyymmdd), int(self.to_yyyymmddd), -1):
+        for day in range(int(self.from_yyyymmdd), int(self.to_yyyymmdd), -1):
+            print("yyyymmdd: {}".self.from_yyyymmdd)
             str_list = []
             dirname = os.path.dirname(__file__)
-            fullpath = os.path.join(dirname, self.from_yyyymmdd+'_StockChart_min.csv')
+            fullpath = os.path.join(dirname, self.from_yyyymmdd+'_StockChart_2016_min.csv')
             num = self.com.GetHeaderValue(3)
             print('received count: {}'.format(num))
 
@@ -76,26 +77,27 @@ class StockChart:
                 for i in range(num):
                     date = self.com.GetDataValue(0, i)
                     if self.from_yyyymmdd != str(date):
-                        print("{} is different with today {}.. continue".format(str(date), self.from_yyyymmdd))
+                        #print("{} is different with today {}.. continue".format(str(date), self.from_yyyymmdd))
                         continue
                 
                         for idx in range(codes.get_stock_field_count()):
-                        try:
-                            #print("\t{0}: {1}".format(codes.stock_field_dic.get(str(idx)), reqObj.GetDataValue(idx, i)))
-                            #print("\t==============")
-                            str_list.append(str(self.com.GetDataValue(idx, i)))
-                        except as e:
-                            print(e)
-                            pass
+                            try:
+                                #print("\t{0}: {1}".format(codes.stock_field_dic.get(str(idx)), reqObj.GetDataValue(idx, i)))
+                                #print("\t==============")
+                                str_list.append(str(self.com.GetDataValue(idx, i)))
+                            except e:
+                                print(e)
+                                pass
 
-                    #print("str_list: {}".format(str_list))
-                    f.write('\t'.join(str_list))
-                    f.write('\n')
-                    del str_list[:]
+                        #print("str_list: {}".format(str_list))
+                        f.write('\t'.join(str_list))
+                        f.write('\n')
+                        del str_list[:]
                 print("[END] write data of {}".format(self.from_yyyymmdd))
 
 if __name__ == '__main__':
-    from_yyyymmdd = datetime.datetime().now.strftime('%Y%m%d')
+    from_yyyymmdd = datetime.datetime.now().strftime('%Y%m%d')
     to_yyyymmdd = '20160101'
+    
     stockchart = StockChart('A067160', from_yyyymmdd, to_yyyymmdd)
   
