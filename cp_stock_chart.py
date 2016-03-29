@@ -22,8 +22,8 @@ class StockChart:
 
         self.count = 400
         self.today = datetime.datetime.now()
-        #self.yyyymmdd = self.today.strftime('%Y%m%d')
-        self.yyyymmdd = '20160325'
+        self.yyyymmdd = self.today.strftime('%Y%m%d')
+        #self.yyyymmdd = '20160325'
         self.com.SetInputValue(0, self.code)
         self.com.SetInputValue(1, '2')        # by count
         self.com.SetInputValue(2, '0')        # lastest
