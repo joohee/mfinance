@@ -1,8 +1,10 @@
+import __init__
 import threading
 from queue import Queue
 import time
 import datetime
-from packages.cp_stock_chart import StockChart
+from pythoncom import CoInitialize
+from cyboplus.cp_stock_chart_with_option import StockChart
 
 class CpThread:
 
@@ -10,7 +12,7 @@ class CpThread:
         self.print_lock = threading.Lock()
         self.q = Queue()
 
-    def convert_date(date):
+    def convert_date(self, date):
         return date.strftime('%Y%m%d')
 
     # 실제 작업하는 놈
@@ -19,7 +21,8 @@ class CpThread:
 
         with self.print_lock:
             print("name: {}, worker: {}, from_date: {}, to_date: {}".format(threading.current_thread().name, worker, from_date, to_date))
-            stockChart = StockChart('A067160', convert_date(from_date), convert_date(to_date))
+            CoInitialize()
+            stockChart = StockChart('A067160', self.convert_date(from_date), self.convert_date(to_date))
 
     def threader(self, from_date, to_date):
         while True:
@@ -28,10 +31,11 @@ class CpThread:
             self.q.task_done()
 
     def work(self):
-        from_date = datetime.datetime.now() 
+        now = datetime.datetime.now() 
 
         for x in range(10):
-            to_date = from_date - datetime.timedelta(days=x)
+            from_date = now - datetime.timedelta(days=x)
+            to_date = now - datetime.timedelta(days=(x+1))
             t = threading.Thread(target = self.threader, args=[from_date, to_date])
             t.daemon = True
             t.start()

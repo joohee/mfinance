@@ -1,3 +1,4 @@
+import __init__
 from weakref import proxy
 from pythoncom import CoInitialize, PumpWaitingMessages
 from win32com.client import gencache, DispatchWithEvents
@@ -5,8 +6,8 @@ from win32event import MsgWaitForMultipleObjects, QS_ALLEVENTS
 import time
 import datetime
 import os
-from cp_template import CpClass
-from cp_stock_chart.codes import StockChart as StockChartCodes 
+from packages.cp_template import CpClass
+from packages.cp_stock_chart.codes import StockChart as StockChartCodes 
 
 class CpEvent(object):
     def OnReceived(self):
@@ -38,7 +39,7 @@ class StockChart:
 
         self.com.Request()
         CoInitialize()
-
+        
         print("today: {}, from: {}, to: {}".format(self.today, from_yyyymmdd, to_yyyymmdd))
         
     def on_signal(self):
