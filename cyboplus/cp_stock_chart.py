@@ -1,12 +1,18 @@
+#import sys
+#import os
+#from pathlib import Path
+#parent_dir = Path(__file__).parent
+#print(parent_dir)
+#sys.path.insert(0, str(parent_dir)+'/packages')
+
+from packages.cp_template import CpClass
+from packages.cp_stock_chart.codes import StockChart as StockChartCodes 
 from weakref import proxy
 from pythoncom import CoInitialize, PumpWaitingMessages
 from win32com.client import gencache, DispatchWithEvents
 from win32event import MsgWaitForMultipleObjects, QS_ALLEVENTS
 import time
 import datetime
-import os
-from packages.cp_template import CpClass
-from packages.cp_stock_chart.codes import StockChart as StockChartCodes 
 
 class CpEvent(object):
     def OnReceived(self):
