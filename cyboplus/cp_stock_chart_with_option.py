@@ -5,8 +5,8 @@ from win32event import MsgWaitForMultipleObjects, QS_ALLEVENTS
 import time
 import datetime
 import os
-from packages.cp_template import CpClass
-from packages.cp_stock_chart.codes import StockChart as StockChartCodes 
+from cp_template import CpClass
+from cp_stock_chart.codes import StockChart as StockChartCodes 
 
 class CpEvent(object):
     def OnReceived(self):
