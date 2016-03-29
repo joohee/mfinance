@@ -1,6 +1,6 @@
 import win32com.client
 import datetime
-from packages.cp_code_mgr.codes import CpCodeMgrCode 
+from cp_code_mgr.codes import CpCodeMgrCode 
 
 def cp_code_mgr():
     instCpCodeMgr = win32com.client.Dispatch("CpUtil.CpCodeMgr")
