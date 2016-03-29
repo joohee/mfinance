@@ -1,5 +1,8 @@
-from cp_template import CpClass
-from cp_stock_chart.codes import StockChart as StockChartCodes 
+import __init__
+import os
+
+from packages.cp_template import CpClass
+from packages.cp_stock_chart.codes import StockChart as StockChartCodes 
 from weakref import proxy
 from pythoncom import CoInitialize, PumpWaitingMessages
 from win32com.client import gencache, DispatchWithEvents
