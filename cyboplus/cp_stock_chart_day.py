@@ -21,13 +21,12 @@ class StockChart:
         self.com = self.event._obj_
         self.event.parent = proxy(self)
 
-
         self.count = 400
         self.today = datetime.datetime.now()
         #self.yyyymmdd = self.today.strftime('%Y%m%d')
-        self.yyyymmdd = '20160325'
+        self.yyyymmdd = '20160301'
         self.com.SetInputValue(0, self.code)
-        self.com.SetInputValue(1, '1')        # by count
+        self.com.SetInputValue(1, '2')        # by date
         self.com.SetInputValue(2, '0')        # lastest
         self.com.SetInputValue(3, self.yyyymmdd)
         self.com.SetInputValue(6, ord('D'))        # minute
@@ -69,9 +68,6 @@ class StockChart:
             print("[START] write data")
             for i in range(num):
                 date = self.com.GetDataValue(0, i)
-                if self.yyyymmdd != str(date):
-                    print("{} is different with today {}.. continue".format(str(date), self.yyyymmdd))
-                    continue
                 
                 for idx in range(codes.get_stock_field_count()):
                     try:
@@ -89,6 +85,6 @@ class StockChart:
 
 if __name__ == '__main__':
     stockchart = StockChart('A178780')     # 유테크 
-
+    #stockchart = StockChart('A067160')      # africa
   
 
