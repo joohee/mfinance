@@ -16,7 +16,11 @@ class CpEvent(object):
         
 class StockChart:
     def __init__(self, code):
+        self.__init__(code, 'NoName')
+        
+    def __init__(self, code, name):
         self.code = code
+        self.name = name
         self.event = DispatchWithEvents("CpSysDib.StockChart", CpEvent)
         self.com = self.event._obj_
         self.event.parent = proxy(self)
@@ -24,10 +28,10 @@ class StockChart:
         self.count = 400
         self.today = datetime.datetime.now()
         #self.yyyymmdd = self.today.strftime('%Y%m%d')
-        self.yyyymmdd = '20160301'
+        self.yyyymmdd = '20160302'
         self.com.SetInputValue(0, self.code)
         self.com.SetInputValue(1, '2')        # by date
-        self.com.SetInputValue(2, '0')        # lastest
+        self.com.SetInputValue(2, 0)        # lastest
         self.com.SetInputValue(3, self.yyyymmdd)
         self.com.SetInputValue(6, ord('D'))        # minute
         
@@ -46,7 +50,7 @@ class StockChart:
 
         str_list = []
         dirname = os.path.dirname(__file__)
-        fullpath = os.path.join(dirname, self.yyyymmdd+'_'+self.code+'_StockChart_day.csv')
+        fullpath = os.path.join(dirname, self.code+'_'+self.name+'_StockChart_day.csv')
         num = self.com.GetHeaderValue(3)
         print('received count: {}'.format(num))
         
@@ -84,13 +88,17 @@ class StockChart:
             print("[END] write data")
 
 if __name__ == '__main__':
-    #stockchart = StockChart('A178780')     # 유테크 
+    #stockchart = StockChart('A178780', '유테크')     # 유테크 
     #stockchart = StockChart('A067160')      # africa
+    #stockchart = StockChart('A000020')
+
     today = datetime.datetime.now().strftime('%Y%m%d')
-    with open(today+'_stock_codes.csv') as f:
-        for line in f.readline():
+    with open(today+'_stock_codes.csv', 'r', encoding='utf-8') as f:
+        for line in f.readlines():
+            print("line: ", line)
             columns = line.split('\t')
-            code = columns[0]
+            code = columns[1]
+            name = columns[2]
             
             print("code: ", code) 
-            stockchart = StockChart(code) 
+            stockchart = StockChart(code, name)
