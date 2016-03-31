@@ -84,7 +84,13 @@ class StockChart:
             print("[END] write data")
 
 if __name__ == '__main__':
-    stockchart = StockChart('A178780')     # 유테크 
+    #stockchart = StockChart('A178780')     # 유테크 
     #stockchart = StockChart('A067160')      # africa
-  
-
+    today = datetime.datetime.now().strftime('%Y%m%d')
+    with open(today+'_stock_codes.csv') as f:
+        for line in f.readline():
+            columns = line.split('\t')
+            code = columns[0]
+            
+            print("code: ", code) 
+            stockchart = StockChart(code) 
