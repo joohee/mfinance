@@ -1,12 +1,14 @@
+import __init__
+import os
+
+from packages.cp_template import CpClass
+from packages.cp_stock_chart.codes import StockChart as StockChartCodes 
 from weakref import proxy
 from pythoncom import CoInitialize, PumpWaitingMessages
 from win32com.client import gencache, DispatchWithEvents
 from win32event import MsgWaitForMultipleObjects, QS_ALLEVENTS
 import time
 import datetime
-import os
-from packages.cp_template import CpClass
-from packages.cp_stock_chart.codes import StockChart as StockChartCodes 
 
 class CpEvent(object):
     def OnReceived(self):
@@ -22,8 +24,8 @@ class StockChart:
 
         self.count = 400
         self.today = datetime.datetime.now()
-        #self.yyyymmdd = self.today.strftime('%Y%m%d')
-        self.yyyymmdd = '20160325'
+        self.yyyymmdd = self.today.strftime('%Y%m%d')
+        #self.yyyymmdd = '20160325'
         self.com.SetInputValue(0, self.code)
         self.com.SetInputValue(1, '2')        # by count
         self.com.SetInputValue(2, '0')        # lastest
