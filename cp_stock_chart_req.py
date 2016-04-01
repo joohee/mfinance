@@ -9,6 +9,21 @@ from packages.cp_template import CpClass
 from packages.cp_stock_chart.codes import StockChart as StockChartCodes 
 
 class StockChart:
+    """ CpSysDib.StockChart API를 이용하여 차트 그래프를 수신한다.
+        조회일 기준 최근 7일 간의 분봉을 수신한다. 
+        OnReceive() function을 사용하지 않고 결과를 기다린 후 file에 기록한다. 
+
+        StockChart API 테스트 결과, 
+        - 6번째 파라미터 값인 count가 start_date에 우선하는 것으로 보인다. 
+
+        Args: 
+            'A' + 조회할 코드 값 6자리. (ex. A000020)
+
+        Returns:
+            %Y%m%d + '_StockChart_req_min.csv' 로 저장한다.
+            저장하는 내용은 cp_stock_chart.py 와 동일하다.
+            
+    """
     def __init__(self, code):
         self.code = code
         self.com_str = "CpSysDib.StockChart"
