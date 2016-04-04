@@ -15,6 +15,56 @@ class CpEvent(object):
         self.parent.on_signal()
         
 class StockChart:
+    """StockChart library를 이용하여 특정 종목의 분봉 값을 얻습니다.
+
+        Args:
+            code - 주식코드. (ex. A000020)
+
+            StockChart.__init__() function에서 아래 값을 설정한다. 
+                0 - 종목코드(string): 주식(A003540), 업종(U001), ELW(J517016)의 종목코드
+                1 - 요청구분(char):
+                    '1' 기간으로 요청
+                    '2' 개수로 요청
+                2 - 요청종료일(ulong): YYYYMMDD형식으로 데이터의 마지막(가장 최근) 날짜 Default(0) - 최근 거래날짜
+                3 - 요청시작일(ulong): YYYYMMDD형식으로 데이터의 시작(가장 오래된) 날짜
+                4 - 요청개수(ulong): 요청할 데이터의 개수
+                5 - 필드(long or long array): 필드 또는 필드 배열
+                    위 값은 packsges.cp_stock_code.codes 의 header_dic 값이 된다. 
+                6 - 차트구분(char)
+                    'D' 일
+                    'W' 주
+                    'M' 월
+                    'm' 분
+                    'T' 틱
+            7 - 주기(ushort): Default-1
+            8 - 갭보정여부(char)
+                '0' 갭무보정 [Default]
+                '1' 갭보정
+            9 - 수정주가(char)
+                '0' 무수정주가 [Default]
+                '1' 수정주가
+            10 - 거래량구분(char)
+                '1' 시간외거래량 모두 포함[Default]
+                '2' 장종료시간외거래량만 포함
+                '3' 시간외거래량 모두 제외
+                '4' 장전시간외거래량만 포함
+
+            * 대비부호는 아래 값을 의미한다. 
+            8 - 대비부호(char)
+                '1' 상한
+                '2' 상승
+                '3' 보합
+                '4' 하한
+                '5' 하락
+                '6' 기세상한
+                '7' 기세상승
+                '8' 기세하한
+                '9' 기세하락
+
+        Returns:
+            요청일 '%Y%m%d'+'_StockChart_min.csv' 파일로 저장한다.
+    """
+
     def __init__(self, code):
         self.code = code
         self.event = DispatchWithEvents("CpSysDib.StockChart", CpEvent)
