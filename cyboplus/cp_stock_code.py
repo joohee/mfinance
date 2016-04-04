@@ -12,7 +12,7 @@ class CPStockCode:
 
         print("=========================\n")
         today = datetime.datetime.now()
-        with open(today.strftime('%Y%m%d')+'_stock_code.csv', 'w', encoding='utf-8') as f:
+        with open(today.strftime('%Y%m%d')+'_stock_codes.csv', 'w', encoding='utf-8') as f:
             count = inst.GetCount()          # count
             for i in range(count):
                 line = str(i)
