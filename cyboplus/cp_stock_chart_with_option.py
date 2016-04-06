@@ -14,6 +14,21 @@ class CpEvent(object):
         self.parent.on_signal()
         
 class StockChart:
+    """CpSysDib.StockChart API를 이용하여 분봉을 추출한다.
+        분봉 추출 날짜를 입력받도록 한다. 
+        (사용해보니, 날짜보다 count가 더 우선순위가 높다)
+
+        Args:
+            code - 주식코드
+            from_yyyymmdd - startDate
+            to_yyyymmdd - endDate
+
+        Returns:
+            [code]_StockChart_2016_min.csv 파일로 저장한다. 
+
+
+    """
+
     def __init__(self, code, from_yyyymmdd, to_yyyymmdd):
         self.code = code
         self.event = DispatchWithEvents("CpSysDib.StockChart", CpEvent)
@@ -49,7 +64,7 @@ class StockChart:
         print("yyyymmdd: {}".format(self.from_yyyymmdd))
         str_list = []
         dirname = os.path.dirname(__file__)
-        fullpath = os.path.join(dirname, str(self.from_yyyymmdd)+'_StockChart_2016_min.csv')
+        fullpath = os.path.join(dirname, str(self.code)+'_StockChart_2016_min.csv')
         num = self.com.GetHeaderValue(3)
         print('received count: {}'.format(num))
 
