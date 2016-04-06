@@ -15,6 +15,17 @@ class CpEvent(object):
         self.parent.on_signal()
         
 class StockChart:
+    """ CpSysDib.StockChart API를 이용하여 일봉을 추출하는 코드입니다. 
+        읽어들일 파일은 cp_stock_code.py 의 결과물을 추출하여 사용합니다. 
+
+        Args: 
+            code - 주식코드
+            name - 주식명 
+
+        Returns:
+            code_name_날짜.csv 파일로 각각 종목에 대해 결과값을 파일로 저장한다.  
+
+    """
     def __init__(self, code):
         self.__init__(code, 'NoName')
         
