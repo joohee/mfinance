@@ -6,6 +6,17 @@ import re
 import time
 
 class Crawl:
+    """ finance.naver.com 기준 종목 별 WICS값을 긁어옵니다. 
+ 
+    Args:
+        종목명이 있는 파일. 
+        code    name    market_code     market_name
+        
+    Returns:
+        원래 내용에서 WICS값을 붙입니다.  
+        code    name    market_code  market_name    wics
+
+    """
     def __init__(self):
         self.dirname = os.path.dirname(__file__)
         self.today = datetime.datetime.now().strftime('%Y%m%d')
