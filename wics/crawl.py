@@ -45,16 +45,33 @@ class Crawl:
                     str_list.append(market_name)
                     
                     #print(prefix.format(code[1:len(code)]))
-                    response = requests.get(prefix.format(code[1:len(code)]))
+                    url =  prefix.format(code[1:len(code)])
+                    print("url: {}".format(url))
+                    response = requests.get(url)
+                    print("r.headers:{}".format(response.headers))
+                    #print(response.text)
 
+                    print("r.header[Content-Type]:{}".format(response.headers['Content-Type']))
+                    content_type = response.headers['Content-Type']
+                    encoding = ''
+                    try:
+                        encoding = content_type.split(';')[1].split('=')[1]
+                    except e:
+                        print("error: {}".format(e))
+                        pass
+
+                    print("encoding: {}".format(encoding))
+                   
                     if response.status_code == 200:
                         with open('downloads/'+code+".html", 'w', encoding='utf-8') as ff:
                             ff.write(response.text)
 
-                        existWICS = False 
-                        for rline in response.iter_lines():
-                            #print(rline)
-                            candidate = rline.decode()
+                        existWICS = False
+                        lines = response.iter_lines()
+                        for rline in lines:
+                            #print("rline:{}".format(rline))
+                            candidate = rline.decode(encoding)
+                            #print("candidate: {}".format(candidate))
                             found = ''
                             if 'WICS :' in candidate:
                                 m = re.search('(?<=<dt class="line-left">).+', candidate)
@@ -74,6 +91,7 @@ class Crawl:
                                 
                     else:
                         print('error...')
+                print("done..")
             target.close()
 
         except IOError as e:
