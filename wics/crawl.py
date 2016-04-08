@@ -12,6 +12,10 @@ class Crawl:
         종목명이 있는 파일. 
         code    name    market_code     market_name
         
+    Process:
+        requests의 response.headers['Content-Type']을 분석하여 encoding값을 알아내고, 
+        iter_lines()를 decode할 때 사용합니다.
+
     Returns:
         원래 내용에서 WICS값을 붙입니다.  
         code    name    market_code  market_name    wics
