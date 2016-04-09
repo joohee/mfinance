@@ -7,6 +7,17 @@ from pythoncom import CoInitialize
 from cyboplus.cp_stock_chart_with_option import StockChart
 
 class CpThread:
+    """CpStockChart API를 이용해서 thread로 데이터를 얻어오도록 한다. 
+        
+        Args:
+            from_date : 조회 시작일
+            to_date : 조회 종료일 
+
+        Returns:
+            cp_stock_chart_with_option.py 파일의 StockChart 를 호출하였으므로 
+            종목별로 csv 파일로 저장한다. 
+        
+    """
 
     def __init__(self):
         self.print_lock = threading.Lock()
