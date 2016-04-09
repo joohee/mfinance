@@ -4,31 +4,38 @@ import time
 
 print_lock = threading.Lock()
 
-def exampleJob(worker):
-    time.sleep(0.5)
+class SampleThread:
+    def __init__(self):
+        self.q = Queue()
+        pass
 
-    with print_lock:
-        print("name: {}, worker: {}".format(threading.current_thread().name, worker))
+    def exampleJob(self, worker):
+        time.sleep(0.5)
 
-def threader():
-    while True:
-        worker = q.get()
-        exampleJob(worker)
-        q.task_done()
+        with print_lock:
+            print("name: {}, worker: {}".format(threading.current_thread().name, worker))
 
+    def threader(self):
+        while True:
+            worker = self.q.get()
+            self.exampleJob(worker)
+            self.q.task_done()
 
-q = Queue()
+    def execute(self):
+        for x in range(10):
+            t = threading.Thread(target = self.threader)
+            t.daemon = True
+            t.start()
 
-for x in range(10):
-    t = threading.Thread(target = threader)
-    t.daemon = True
-    t.start()
+        self.start = time.time()
 
-start = time.time()
+        for worker in range(20):
+            self.q.put(worker)
 
-for worker in range(20):
-    q.put(worker)
+        self.q.join()
 
-q.join()
+if __name__ == '__main__':
+    sf = SampleThread()
+    sf.execute()
+    print('Entire job took:', time.time()-sf.start)
 
-print('Entire job took:', time.time()-start)
