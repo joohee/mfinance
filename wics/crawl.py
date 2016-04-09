@@ -6,6 +6,21 @@ import re
 import time
 
 class Crawl:
+    """ finance.naver.com 기준 종목 별 WICS값을 긁어옵니다. 
+ 
+    Args:
+        종목명이 있는 파일. 
+        code    name    market_code     market_name
+        
+    Process:
+        requests의 response.headers['Content-Type']을 분석하여 encoding값을 알아내고, 
+        iter_lines()를 decode할 때 사용합니다.
+
+    Returns:
+        원래 내용에서 WICS값을 붙입니다.  
+        code    name    market_code  market_name    wics
+
+    """
     def __init__(self):
         self.dirname = os.path.dirname(__file__)
         self.today = datetime.datetime.now().strftime('%Y%m%d')
@@ -45,16 +60,33 @@ class Crawl:
                     str_list.append(market_name)
                     
                     #print(prefix.format(code[1:len(code)]))
-                    response = requests.get(prefix.format(code[1:len(code)]))
+                    url =  prefix.format(code[1:len(code)])
+                    print("url: {}".format(url))
+                    response = requests.get(url)
+                    print("r.headers:{}".format(response.headers))
+                    #print(response.text)
 
+                    print("r.header[Content-Type]:{}".format(response.headers['Content-Type']))
+                    content_type = response.headers['Content-Type']
+                    encoding = ''
+                    try:
+                        encoding = content_type.split(';')[1].split('=')[1]
+                    except e:
+                        print("error: {}".format(e))
+                        pass
+
+                    print("encoding: {}".format(encoding))
+                   
                     if response.status_code == 200:
                         with open('downloads/'+code+".html", 'w', encoding='utf-8') as ff:
                             ff.write(response.text)
 
-                        existWICS = False 
-                        for rline in response.iter_lines():
-                            #print(rline)
-                            candidate = rline.decode()
+                        existWICS = False
+                        lines = response.iter_lines()
+                        for rline in lines:
+                            #print("rline:{}".format(rline))
+                            candidate = rline.decode(encoding)
+                            #print("candidate: {}".format(candidate))
                             found = ''
                             if 'WICS :' in candidate:
                                 m = re.search('(?<=<dt class="line-left">).+', candidate)
@@ -74,6 +106,7 @@ class Crawl:
                                 
                     else:
                         print('error...')
+                print("done..")
             target.close()
 
         except IOError as e:
