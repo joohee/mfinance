@@ -7,6 +7,18 @@ import time
 from collections import Counter
 
 class Crawl:
+    """
+        crawl.py 를 실행한 후 얻은 WICS 값에 대해 count를 계산한다. 
+
+        Args:
+            [오늘날짜.format('%Y%m%d')]_stock_codes.csv 파일을 찾는다.
+            없으면 IOError가 발생한다. 
+
+        Return:
+            wics_count.csv 파일에 저장한다. 내용 포맷은 아래와 같다. 
+                WICS 이름   count
+                WICS:인터넷소프트웨어와서비스 1
+    """
     def __init__(self):
         self.dirname = os.path.dirname(__file__)
         pass
